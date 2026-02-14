@@ -20,7 +20,7 @@ Log debug file /var/log/tor/server_debug.log
 
 essa foi a configuração exata que usei, apos configura-lo, bastou algumas horas ate que meu relay ja estivesse ativo e funcionando
 
-![Metrics Relay de Saida](correlação_tor_1/images/metrics-exit.png)
+![Metrics Relay de Saida](images/metrics-exit.png)
 
 ---
 
@@ -55,8 +55,8 @@ a unica forma que consegui pensar para fazer isso seria modificando o server do 
 
 a logica é simples: basta aguardar alguma chamada de um middleNode, então ver se apos isso, alguem acessa algum site pela logica, o site acessado foi acessado pelo middleNode, então assim a correlação funciona
 
-![TCPDUMP 9001 TOR EXIT](correlação_tor_1/images/tcp-dump-9001-saida.png)
-![TCPDUMP 443 TOR EXIT](correlação_tor_1/images/tcp-dump-443-saida.png)
+![TCPDUMP 9001 TOR EXIT](images/tcp-dump-9001-saida.png)
+![TCPDUMP 443 TOR EXIT](images/tcp-dump-443-saida.png)
 
 o problema é que mesmo meu relay de saida sendo novo e estando online a pouco tempo.. ja tenho centenas de clientes simultanos usando meu relay, ou seja não seria facil correlacionar o tempo do que entra com o que sai..
 
@@ -180,13 +180,13 @@ except KeyboardInterrupt:
 ```
 
 
-![Primeira execução](correlação_tor_1/images/primeira-run-exit.png)
+![Primeira execução](images/primeira-run-exit.png)
 
 mesmo esse script extremamente simples, ja tive um resultado bem satisfatorio, ele conseguiu relacionar perfeitamente os meus acessos que estava fazendo ao site ifconfig.me
 
 claro ele teve alguns falso positivo, mas mesmo o numero de falso positivo foi muito baixo apenas o acesso ao `64.65.1.5` não consegui identificar.. provavelmente um falso positivo
 
-![Segunda execução execução](correlação_tor_1/images/primeira-run-exit-filtro.png)
+![Segunda execução execução](images/primeira-run-exit-filtro.png)
 
 
 o problema é que o script estava travando.. muito provavelmente devido a estouro de memoria
@@ -315,7 +315,7 @@ except KeyboardInterrupt:
 ```
 
 A nova versão elimina os estouros de memória que impediam capturas longas. Sem os travamentos, foi possível realizar testes mais extensos, o que revelou um número de correlações bem satisfatório. Boa parte dos falsos positivos restantes deve ser eliminada quando os resultados do nó de saída forem cruzados com as capturas do nó de guarda.
-![Penultima versao script saida](correlação_tor_1/images/script-saida-quase-pronto.png)
+![Penultima versao script saida](images/script-saida-quase-pronto.png)
 
 ---
 
@@ -481,7 +481,7 @@ except KeyboardInterrupt:
     print(f"\n=== {matches} correlações ===")
 
 ```
-![Penultima versao script saida](correlação_tor_1/images/primeira-run-guard.png)
+![Penultima versao script saida](images/primeira-run-guard.png)
 
 
 a primeira execução do script que correlaciona o IP Real com o Middle foi bem deprimente, de todas as minhas chamadas ele capturou com sucesso apenas uma.. 1 de 4 é um numero bem merda.. a diminuição dos falso positivo que a captura no exitNode gera, depende totalmente da captura feita no guardNode, quanto mais limpa ela for, menos falso positivo eu vou ter
@@ -623,7 +623,7 @@ except KeyboardInterrupt:
 
 dessa vez ele capturou muito mais pacotes com sucesso, infelismente não diminuiu 100%, ate porque acredito que a forma que estou fazendo não é a mais sofisticada, mas acho que da forma como esta ja vamos ser capazes de ter uma noção bem realista e proxima do impacto real de um ataque correlacional no TOR
 
-![Penultima versao script saida run 2](correlação_tor_1/images/segunda-run-guard.png)
+![Penultima versao script saida run 2](images/segunda-run-guard.png)
 
 
 acho que essa execução foi bem satisfatoria... o proximo passo sem duvidas é de alguma forma salvar os logs gerados na captura do guard e no exit e tentar fazer todo mapeamento do quem sou e o que estou acessando
@@ -636,7 +636,7 @@ minha ideia foi salvar os resultados em um json ficar sempre alimentando ele, e 
 
 enquanto eu escrevia o script algo realmente me assustou..
 
-![Correlações reais](correlação_tor_1/images/correlacoes_reais.png)
+![Correlações reais](images/correlacoes_reais.png)
 
 trafegos REAIS sendo correlacionados.. isso é assustador porque correlacionar o meu trafego é tranquilo, como mostrado eu configurei meu cliente explicitamente para usar meu 2 nodos infectados.. mas e esses clientes ? ninguem aqui fez essa configuração..
 
@@ -645,7 +645,7 @@ tudo bem, o script não esta 100% preciso, mas a precisão existe, imaginar que 
 como o codigo ainda estava em desenvolvimento eu não cheguei a salvar a versão exata desse print, mas a versão final pode ser acessada em `script/`
 
 
-![Correlações reais](correlação_tor_1/images/correlacao_final.png)
+![Correlações reais](images/correlacao_final.png)
 
 
 e este foi o resultado final do nosso teste de correlação na rede TOR, tivemos varios falsos positivos mas isso é de se esperar, nosso script é extremamente rustico, porem foi possivel correlacionar com sucesso todos os sites que acessei, o metrics.torproject.org ifconfig.me, com sucesso.
